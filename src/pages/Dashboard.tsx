@@ -2,6 +2,7 @@ import type { JSX } from 'react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePlayer } from '../hooks/usePlayer'
+import { usePlayerStore } from '../store/usePlayerStore'
 import { logout } from '../api/auth'
 import NowPlaying from '../components/NowPlaying'
 import AudioFeaturesGrid from '../components/AudioFeaturesGrid'
@@ -9,7 +10,8 @@ import RadarChart from '../components/RadarChart'
 import SimilarTracks from '../components/SimilarTracks'
 
 export default function Dashboard(): JSX.Element {
-  const { track, isLoading, error, recommendations } = usePlayer()
+  usePlayer()
+  const { track, isLoading, error, recommendations } = usePlayerStore()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -20,7 +22,7 @@ export default function Dashboard(): JSX.Element {
   }, [track?.features?.energy])
 
   return (
-    <div className="bg-zinc-950 min-h-screen text-white">
+    <div className="bg-zinc-950 min-h-screen text-white pb-24">
       {/* Header */}
       <header className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
         <h1 className="text-lg font-bold tracking-tight">Spotify Visualizer</h1>

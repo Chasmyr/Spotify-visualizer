@@ -4,16 +4,15 @@
 //  Fetch audio features uniquement si track change
 // ─────────────────────────────────────────────
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { getValidToken } from '../api/auth'
+import { usePlayerStore } from '../store/usePlayerStore'
 import type {
-  NormalizedTrack,
-  UsePlayerReturn,
   SpotifyPlayerRaw,
   SpotifyAudioFeaturesRaw,
   SpotifyRecommendationsRaw,
-  SpotifyTrackRaw,
   AudioFeatures,
+  NormalizedTrack,
 } from '../types/spotify'
 
 const POLL_INTERVAL = 5000
@@ -75,11 +74,8 @@ function normalizeTrack(
   }
 }
 
-export function usePlayer(): UsePlayerReturn {
-  const [track,           setTrack]           = useState<NormalizedTrack | null>(null)
-  const [isLoading,       setIsLoading]       = useState<boolean>(true)
-  const [error,           setError]           = useState<string | null>(null)
-  const [recommendations, setRecommendations] = useState<SpotifyTrackRaw[]>([])
+export function usePlayer(): void {
+  const { setTrack, setLoading, setError, setRecommendations, updateProgress } = usePlayerStore()
   const lastTrackIdRef = useRef<string | null>(null)
 
   const poll = useCallback(async (): Promise<void> => {
@@ -89,7 +85,7 @@ export function usePlayer(): UsePlayerReturn {
       if (!raw?.item) {
         setTrack(null)
         lastTrackIdRef.current = null
-        setIsLoading(false)
+        setLoading(false)
         return
       }
 
@@ -97,17 +93,15 @@ export function usePlayer(): UsePlayerReturn {
 
       // Même morceau → mise à jour progression uniquement
       if (currentId === lastTrackIdRef.current) {
-        setTrack((prev) =>
-          prev ? { ...prev, progress: raw.progress_ms, isPlaying: raw.is_playing } : prev
-        )
-        setIsLoading(false)
+        updateProgress(raw.progress_ms, raw.is_playing)
+        setLoading(false)
         return
       }
 
       // Nouveau morceau détecté
       lastTrackIdRef.current = currentId
       setTrack(normalizeTrack(raw, null)) // affichage immédiat sans features
-      setIsLoading(false)
+      setLoading(false)
 
       const features = await apiFetch<SpotifyAudioFeaturesRaw>(`/audio-features/${currentId}`)
       setTrack(normalizeTrack(raw, features))
@@ -124,15 +118,13 @@ export function usePlayer(): UsePlayerReturn {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erreur inconnue'
       setError(message)
-      setIsLoading(false)
+      setLoading(false)
     }
-  }, [])
+  }, [setTrack, setLoading, setError, setRecommendations, updateProgress])
 
   useEffect(() => {
     void poll()
     const id = setInterval(() => void poll(), POLL_INTERVAL)
     return () => clearInterval(id)
   }, [poll])
-
-  return { track, isLoading, error, recommendations, refresh: poll }
 }
