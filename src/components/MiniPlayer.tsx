@@ -36,33 +36,27 @@ export default function MiniPlayer(): JSX.Element | null {
       </div>
 
       {/* BPM badge */}
-      {track.features && (
-        <div className="hidden sm:flex items-center gap-1 bg-zinc-800 rounded-full px-2 py-1">
-          <span className="text-xs font-mono text-[var(--accent)]">{track.features.bpm} BPM</span>
-        </div>
-      )}
+      <div className="hidden sm:flex items-center gap-1 bg-zinc-800 rounded-full px-2 py-1">
+        <span className="text-xs font-mono text-[var(--accent)]">{track.features.bpm} BPM</span>
+      </div>
 
       {/* Indicateur énergie */}
-      {track.features && (
-        <div className="hidden md:flex items-center gap-2 w-24">
-          <span className="text-xs text-zinc-500">Énergie</span>
-          <div className="bg-zinc-700 rounded-full h-1 flex-1">
-            <div
-              className="bg-[var(--accent)] h-full rounded-full transition-all duration-700"
-              style={{ width: `${track.features.energy * 100}%` }}
-            />
-          </div>
+      <div className="hidden md:flex items-center gap-2 w-24">
+        <span className="text-xs text-zinc-500">Énergie</span>
+        <div className="bg-zinc-700 rounded-full h-1 flex-1">
+          <div
+            className="bg-[var(--accent)] h-full rounded-full transition-all duration-700"
+            style={{ width: `${track.features.energy * 100}%` }}
+          />
         </div>
-      )}
+      </div>
 
       {/* Tonalité badge */}
-      {track.features && (
-        <div className="hidden lg:flex">
-          <span className="text-xs font-mono text-purple-300 bg-purple-900/40 border border-purple-700/50 rounded-full px-2 py-1">
-            {track.features.key}
-          </span>
-        </div>
-      )}
+      <div className="hidden lg:flex">
+        <span className="text-xs font-mono text-purple-300 bg-purple-900/40 border border-purple-700/50 rounded-full px-2 py-1">
+          {track.features.key}
+        </span>
+      </div>
     </div>
   )
 }

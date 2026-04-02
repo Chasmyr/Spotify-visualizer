@@ -39,6 +39,12 @@ export interface SpotifyPlayerRaw {
   item: SpotifyTrackRaw
 }
 
+/**
+ * @deprecated Le endpoint /v1/audio-features est déprécié par Spotify
+ * depuis le 27/11/2024 pour les nouvelles apps.
+ * Ce type est conservé pour référence mais n'est plus utilisé.
+ * Les audio features sont maintenant simulées via src/utils/fakeFeatures.ts
+ */
 export interface SpotifyAudioFeaturesRaw {
   id: string
   tempo: number
@@ -86,7 +92,7 @@ export interface NormalizedTrack {
   progress: number
   isPlaying: boolean
   uri: string
-  features: AudioFeatures | null
+  features: AudioFeatures
 }
 
 // ── Hook usePlayer ────────────────────────────

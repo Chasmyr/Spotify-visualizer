@@ -1,27 +1,20 @@
 // ─────────────────────────────────────────────
 //  usePlayer — Hook central du visualizer
 //  Polling /currently-playing toutes les 5s
-//  Fetch audio features uniquement si track change
+//  Features générées de façon déterministe (fakeFeatures)
 // ─────────────────────────────────────────────
 
 import { useEffect, useCallback, useRef } from 'react'
 import { getValidToken } from '../api/auth'
 import { usePlayerStore } from '../store/usePlayerStore'
+import { generateFakeFeatures } from '../utils/fakeFeatures'
 import type {
   SpotifyPlayerRaw,
-  SpotifyAudioFeaturesRaw,
   SpotifyRecommendationsRaw,
-  AudioFeatures,
   NormalizedTrack,
 } from '../types/spotify'
 
 const POLL_INTERVAL = 5000
-const PITCH_CLASSES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'] as const
-
-function formatKey(key: number, mode: number): string {
-  if (key === -1) return 'N/A'
-  return `${PITCH_CLASSES[key]} ${mode === 1 ? 'Major' : 'Minor'}`
-}
 
 async function apiFetch<T>(endpoint: string): Promise<T | null> {
   const token = await getValidToken()
@@ -37,28 +30,7 @@ async function apiFetch<T>(endpoint: string): Promise<T | null> {
   return res.json() as Promise<T>
 }
 
-function normalizeFeatures(raw: SpotifyAudioFeaturesRaw): AudioFeatures {
-  return {
-    bpm:              Math.round(raw.tempo),
-    energy:           raw.energy,
-    danceability:     raw.danceability,
-    valence:          raw.valence,
-    acousticness:     raw.acousticness,
-    liveness:         raw.liveness,
-    speechiness:      raw.speechiness,
-    instrumentalness: raw.instrumentalness,
-    loudness:         raw.loudness,
-    loudnessNorm:     Math.max(0, (raw.loudness + 60) / 60),
-    key:              formatKey(raw.key, raw.mode),
-    keyRaw:           raw.key,
-    mode:             raw.mode,
-  }
-}
-
-function normalizeTrack(
-  raw: SpotifyPlayerRaw,
-  features: SpotifyAudioFeaturesRaw | null
-): NormalizedTrack {
+function normalizeTrack(raw: SpotifyPlayerRaw): NormalizedTrack {
   const track = raw.item
   return {
     id:        track.id,
@@ -70,7 +42,7 @@ function normalizeTrack(
     progress:  raw.progress_ms,
     isPlaying: raw.is_playing,
     uri:       track.uri,
-    features:  features ? normalizeFeatures(features) : null,
+    features:  generateFakeFeatures(track.id),
   }
 }
 
@@ -98,23 +70,20 @@ export function usePlayer(): void {
         return
       }
 
-      // Nouveau morceau détecté
+      // Nouveau morceau détecté — features générées immédiatement, pas de fetch
       lastTrackIdRef.current = currentId
-      setTrack(normalizeTrack(raw, null)) // affichage immédiat sans features
+      const normalized = normalizeTrack(raw)
+      setTrack(normalized)
       setLoading(false)
-
-      const features = await apiFetch<SpotifyAudioFeaturesRaw>(`/audio-features/${currentId}`)
-      setTrack(normalizeTrack(raw, features))
       setError(null)
 
-      // Recommendations basées sur l'énergie
-      if (features) {
-        apiFetch<SpotifyRecommendationsRaw>(
-          `/recommendations?seed_tracks=${currentId}&target_energy=${features.energy.toFixed(2)}&limit=5&market=FR`
-        )
-          .then((data) => setRecommendations(data?.tracks ?? []))
-          .catch(() => {})
-      }
+      // Recommendations basées sur l'énergie simulée
+      const energy = normalized.features.energy
+      apiFetch<SpotifyRecommendationsRaw>(
+        `/recommendations?seed_tracks=${currentId}&target_energy=${energy.toFixed(2)}&limit=5&market=FR`
+      )
+        .then((data) => setRecommendations(data?.tracks ?? []))
+        .catch(() => {})
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erreur inconnue'
       setError(message)

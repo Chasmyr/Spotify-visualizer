@@ -2,20 +2,10 @@ import type { JSX } from 'react'
 import type { AudioFeatures } from '../types/spotify'
 
 interface AudioFeaturesGridProps {
-  features: AudioFeatures | null
+  features: AudioFeatures
 }
 
 export default function AudioFeaturesGrid({ features }: AudioFeaturesGridProps): JSX.Element {
-  if (!features) {
-    return (
-      <div className="grid grid-cols-2 gap-3">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="h-28 bg-zinc-800 rounded-xl animate-pulse" />
-        ))}
-      </div>
-    )
-  }
-
   const barHeights = [40, 70, 55, 85, 45, 60, 75, 50]
 
   return (

@@ -9,7 +9,7 @@ import {
 import type { AudioFeatures } from '../types/spotify'
 
 interface RadarChartProps {
-  features: AudioFeatures | null
+  features: AudioFeatures
 }
 
 interface RadarDataPoint {
@@ -18,10 +18,6 @@ interface RadarDataPoint {
 }
 
 export default function RadarChart({ features }: RadarChartProps): JSX.Element {
-  if (!features) {
-    return <div className="h-56 bg-zinc-900 rounded-xl animate-pulse" />
-  }
-
   const data: RadarDataPoint[] = [
     { axis: 'Dance',      value: features.danceability },
     { axis: 'Énergie',    value: features.energy },
