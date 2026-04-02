@@ -10,7 +10,6 @@ import { usePlayerStore } from '../store/usePlayerStore'
 import { generateFakeFeatures } from '../utils/fakeFeatures'
 import type {
   SpotifyPlayerRaw,
-  SpotifyRecommendationsRaw,
   NormalizedTrack,
 } from '../types/spotify'
 
@@ -47,7 +46,7 @@ function normalizeTrack(raw: SpotifyPlayerRaw): NormalizedTrack {
 }
 
 export function usePlayer(): void {
-  const { setTrack, setLoading, setError, setRecommendations, updateProgress } = usePlayerStore()
+  const { setTrack, setLoading, setError, updateProgress } = usePlayerStore()
   const lastTrackIdRef = useRef<string | null>(null)
 
   const poll = useCallback(async (): Promise<void> => {
@@ -77,19 +76,12 @@ export function usePlayer(): void {
       setLoading(false)
       setError(null)
 
-      // Recommendations basées sur l'énergie simulée
-      const energy = normalized.features.energy
-      apiFetch<SpotifyRecommendationsRaw>(
-        `/recommendations?seed_tracks=${currentId}&target_energy=${energy.toFixed(2)}&limit=5&market=FR`
-      )
-        .then((data) => setRecommendations(data?.tracks ?? []))
-        .catch(() => {})
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erreur inconnue'
       setError(message)
       setLoading(false)
     }
-  }, [setTrack, setLoading, setError, setRecommendations, updateProgress])
+  }, [setTrack, setLoading, setError, updateProgress])
 
   useEffect(() => {
     void poll()

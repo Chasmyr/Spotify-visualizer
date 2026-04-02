@@ -7,11 +7,9 @@ import { logout } from '../api/auth'
 import NowPlaying from '../components/NowPlaying'
 import AudioFeaturesGrid from '../components/AudioFeaturesGrid'
 import RadarChart from '../components/RadarChart'
-import SimilarTracks from '../components/SimilarTracks'
-
 export default function Dashboard(): JSX.Element {
   usePlayer()
-  const { track, isLoading, error, recommendations } = usePlayerStore()
+  const { track, isLoading, error } = usePlayerStore()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -72,8 +70,6 @@ export default function Dashboard(): JSX.Element {
               </div>
             </div>
 
-            {/* Pleine largeur */}
-            <SimilarTracks tracks={recommendations} />
           </div>
         )}
       </main>
