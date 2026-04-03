@@ -2,7 +2,7 @@
 
 **Demo live : [spotify-visualizer-vercel.vercel.app](https://spotify-visualizer-vercel.vercel.app/)**
 
-Visualisation en temps réel des caractéristiques audio d'un morceau Spotify — BPM, énergie, tonalité, valence et plus.
+Visualisation en temps réel des caractéristiques audio d'un morceau Spotify : BPM, énergie, tonalité, valence et plus.
 
 ## Aperçu
 
@@ -68,7 +68,7 @@ npm run dev
 
 ## Tester l'application
 
-L'app tourne en **mode Development Spotify** — l'accès est limité à 25 utilisateurs ajoutés manuellement, ce qui est largement suffisant pour un portfolio.
+L'app tourne en **mode Development Spotify** — l'accès est limité à 5 utilisateurs ajoutés manuellement.
 
 **Demo live : [spotify-visualizer-vercel.vercel.app](https://spotify-visualizer-vercel.vercel.app/)**
 
@@ -86,6 +86,6 @@ L'app tourne en **mode Development Spotify** — l'accès est limité à 25 util
 
 - Flow OAuth 2.0 PKCE sans backend (Proof Key for Code Exchange)
 - TypeScript strict : types génériques, unions, type guards sur les réponses API
-- Contournement d'une API dépréciée : génération déterministe de données via un PRNG seedé par l'ID
+- Contournement d'une API dépréciée : génération déterministe de données via l'ID
 - Polling optimisé : progression mise à jour sans re-render complet grâce à Zustand
 - Visualisation de données avec Recharts (radar chart responsive)
