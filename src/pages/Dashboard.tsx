@@ -22,7 +22,7 @@ export default function Dashboard(): JSX.Element {
   return (
     <div className="bg-zinc-950 min-h-screen text-white pb-24">
       {/* Header */}
-      <header className="flex items-center justify-between px-8 py-5 border-b border-zinc-800">
+      <header className="flex items-center justify-between px-4 py-4 sm:px-8 sm:py-5 border-b border-zinc-800">
         <h1 className="text-lg font-bold tracking-tight">Spotify Visualizer</h1>
         <button
           onClick={() => { logout(); void navigate('/login') }}
@@ -32,7 +32,7 @@ export default function Dashboard(): JSX.Element {
         </button>
       </header>
 
-      <main className="p-8">
+      <main className="p-4 sm:p-8">
         {/* Chargement */}
         {isLoading && (
           <div className="flex items-center justify-center h-64">
@@ -56,20 +56,17 @@ export default function Dashboard(): JSX.Element {
 
         {/* Contenu principal */}
         {!isLoading && track && (
-          <div className="flex flex-col gap-6">
-            <div className="flex gap-8">
-              {/* Colonne gauche — 1/3 */}
-              <div className="w-1/3 flex-shrink-0">
-                <NowPlaying track={track} />
-              </div>
-
-              {/* Colonne droite — 2/3 */}
-              <div className="flex-1 flex flex-col gap-4">
-                <AudioFeaturesGrid features={track.features} />
-                <RadarChart features={track.features} />
-              </div>
+          <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+            {/* Colonne gauche */}
+            <div className="w-full lg:w-72 lg:flex-shrink-0">
+              <NowPlaying track={track} />
             </div>
 
+            {/* Colonne droite */}
+            <div className="flex-1 flex flex-col gap-4">
+              <AudioFeaturesGrid features={track.features} />
+              <RadarChart features={track.features} />
+            </div>
           </div>
         )}
       </main>
