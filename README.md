@@ -1,73 +1,65 @@
-# React + TypeScript + Vite
+# Spotify Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Visualisation en temps réel des caractéristiques audio d'un morceau Spotify — BPM, énergie, tonalité, valence et plus.
 
-Currently, two official plugins are available:
+## Aperçu
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> _Ajoute une capture d'écran ici après le premier lancement_
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Affichage en temps réel du morceau en cours de lecture
+- Audio features : BPM, énergie, tonalité, valence, danceability
+- Radar chart des 6 dimensions sonores
+- Couleur d'accent dynamique selon l'énergie du morceau
+- Mini player persistant en bas de l'écran
+- Authentification OAuth 2.0 PKCE (sans backend)
 
-## Expanding the ESLint configuration
+## Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Outil | Rôle |
+|---|---|
+| React 18 + Vite | UI + bundler |
+| TypeScript strict | Typage complet, zéro `any` |
+| React Router v6 | Navigation + route protégée |
+| Tailwind CSS | Styles |
+| Recharts | Radar chart |
+| Zustand | State management global |
+| Spotify Web API | Données player |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/ton-user/spotify-visualizer
+cd spotify-visualizer
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Crée un fichier `.env` à la racine :
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+VITE_SPOTIFY_CLIENT_ID=ton_client_id
+VITE_REDIRECT_URI=http://127.0.0.1:5173/callback
+```
+
+> Obtiens ton `Client ID` sur [developer.spotify.com](https://developer.spotify.com/dashboard) et ajoute `http://127.0.0.1:5173/callback` comme Redirect URI.
+
+```bash
+npm run dev
+```
+
+## Déploiement
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+1. Déploie sur Vercel
+2. Ajoute les variables d'environnement dans le dashboard Vercel
+3. Ajoute l'URL de prod comme Redirect URI dans ton Spotify Dashboard
+
+## Ce que j'ai appris
+
+- Flow OAuth 2.0 PKCE sans backend (Proof Key for Code Exchange)
+- TypeScript strict : types génériques, unions, type guards sur les réponses API
+- Polling optimisé : progression mise à jour sans re-render complet grâce à Zustand
+- Simulation déterministe de données : même ID → mêmes valeurs via un générateur pseudo-aléatoire seedé
+- Visualisation de données avec Recharts (radar chart responsive)
