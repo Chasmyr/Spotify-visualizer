@@ -1,5 +1,7 @@
 # Spotify Visualizer
 
+**Demo live : [spotify-visualizer-vercel.vercel.app](https://spotify-visualizer-vercel.vercel.app/)**
+
 Visualisation en temps réel des caractéristiques audio d'un morceau Spotify — BPM, énergie, tonalité, valence et plus.
 
 ## Aperçu
@@ -63,6 +65,14 @@ VITE_REDIRECT_URI=http://127.0.0.1:5173/callback
 ```bash
 npm run dev
 ```
+
+## Tester l'application
+
+L'app tourne en **mode Development Spotify** — l'accès est limité à 25 utilisateurs ajoutés manuellement, ce qui est largement suffisant pour un portfolio.
+
+**Demo live : [spotify-visualizer-vercel.vercel.app](https://spotify-visualizer-vercel.vercel.app/)**
+
+**Pour obtenir l'accès :** envoie-moi ton email Spotify en DM, je t'ajoute immédiatement.
 
 ## Déploiement
 
